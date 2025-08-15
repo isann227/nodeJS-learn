@@ -1,6 +1,7 @@
-import { readData, writeData, updateData, deleteData } from './utils/fileHandler.js';
+import { readData, writeData, updateData, deleteData } from '../day-3/utils/fileHandler.js';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
+import { isValidPhone, isValidEmail } from '../day-3/utils/validatorESM.js';
 
 yargs(hideBin(process.argv))
 // Add
@@ -25,6 +26,14 @@ yargs(hideBin(process.argv))
       }
     },
     handler(argv) {
+      if (!isValidPhone(argv.phone)) {
+        console.log('Nomor HP tidak valid.');
+        return;
+      }
+      if (!isValidEmail(argv.email)) {
+        console.log('Email tidak valid.');
+        return;
+      }
       const data = readData();
       data.push({ name: argv.name, phone: argv.phone, email: argv.email });
       writeData(data);
@@ -49,6 +58,14 @@ yargs(hideBin(process.argv))
       email: { type: 'string' }
     },
     handler(argv) {
+        if (argv.phone && !isValidPhone(argv.phone)) {
+        console.log('Nomor HP tidak valid.');
+        return;
+      }
+      if (argv.email && !isValidEmail(argv.email)) {
+        console.log('Email tidak valid.');
+        return;
+      }
       updateData(argv.name, { phone: argv.phone, email: argv.email });
     }
   })

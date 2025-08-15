@@ -40,8 +40,18 @@
     "email": "isan@gmail.com"
   },
   {
-    "name": "hakim",
+    "name": "ican",
     "phone": "08123456789",
-    "email": "hakiminsan@gmail.com"
+    "email": "ican@gmail.com"
+  },
+  {
+    "name": "ican",
+    "phone": "23456789",
+    "email": "icangmail.com"
+  },
+  {
+    "name": "hakim",
+    "phone": "08981271415",
+    "email": "hakim@gmail.com"
   }
 ]
