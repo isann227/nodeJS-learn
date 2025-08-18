@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian Produk</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>Pencarian Produk</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Beranda</a></li>
+        <li><a href="/about">Tentang</a></li>
+        <li><a href="/contact">Kontak</a></li>
+        <li><a href="/product">Produk</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Cari Produk</h2>
+      <!-- Form ini akan menuju ke /product/:id -->
+      <form method="get" action="/product/101">
+        <label for="category">Kategori:</label>
+        <input type="text" id="category" name="category" placeholder="misal: elektronik">
+        <button type="submit">Cari</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Website Saya</p>
+  </footer>
+</body>
+</html>
