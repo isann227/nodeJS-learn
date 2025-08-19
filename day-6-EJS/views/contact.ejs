@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= nama %></title>
+</head>
+<body>
+  <header>
+    <h1>Kontak Kami</h1>
+    <%- include('layout/nav.ejs') %>
+  </header>
+
+  <main>
+    <section>
+      <ul>
+    <% contact.forEach(c => { %>
+      <li><strong><%= c.name %></strong> - <%= c.phone %></li>
+    <% }) %>
+  </ul>
+    </section>
+  </main>
+
+  <%- include('layout/footer.ejs') %>
+</body>
+</html>
