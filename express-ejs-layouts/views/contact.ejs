@@ -1,0 +1,10 @@
+<h2>Kontak</h2>
+  <main>
+    <section>
+      <ul>
+    <% contact.forEach(c => { %>
+      <li><strong><%= c.name %></strong> - <%= c.phone %></li>
+    <% }) %>
+  </ul>
+    </section>
+  </main>
