@@ -1,57 +1,50 @@
 [
   {
-    "name": "insan hakim",
-    "phone": "08981271415",
-    "email": "insanhakim@gmail.com"
-  },
-  {
-    "name": "hakim insan",
-    "phone": "089738292928",
-    "email": "hakiminsan@gmail.com"
-  },
-  {
-    "name": "isann",
-    "phone": "089736827233",
-    "email": "isan@gmail.com"
-  },
-  {
-    "name": "insan hakim",
-    "phone": "0898172722",
-    "email": "insanhakim@gmail.com"
-  },
-  {
+    "id": 1,
     "name": "insan",
-    "phone": "08989123334",
+    "phone": "08981271415",
     "email": "insan@gmail.com"
   },
   {
-    "name": "isan",
-    "phone": "08123456789",
-    "email": "isan@gmail.com"
-  },
-  {
-    "name": "isan",
-    "phone": "08123456789",
-    "email": "isan@gmail.com"
-  },
-  {
-    "name": "isan",
-    "phone": "08123456789",
-    "email": "isan@gmail.com"
-  },
-  {
-    "name": "ican",
-    "phone": "08123456789",
-    "email": "ican@gmail.com"
-  },
-  {
-    "name": "ican",
-    "phone": "23456789",
-    "email": "icangmail.com"
-  },
-  {
+    "id": 2,
     "name": "hakim",
-    "phone": "08981271415",
+    "phone": "089812712627",
     "email": "hakim@gmail.com"
+  },
+  {
+    "id": 3,
+    "name": "insan hakim",
+    "phone": "08982782827",
+    "email": "insanhakim@gmail.com"
+  },
+  {
+    "id": 4,
+    "name": "isan",
+    "phone": "08982788229",
+    "email": "isan@gmail.com"
+  },
+  {
+    "id": 5,
+    "name": "test",
+    "phone": "08981828282",
+    "email": "test@gmail.com"
+  },
+  {
+    "id": 6,
+    "name": "testoo",
+    "phone": "08728828229",
+    "email": "testoo@gmail.com"
+  },
+  {
+    "id": 7,
+    "name": "hakim insan",
+    "phone": "08973838392",
+    "email": "hakiminsan@gmail.com"
+  },
+  {
+    "id": 8,
+    "name": "testtest",
+    "phone": "08927892882",
+    "email": "testtest@gmail.com"
   }
 ]

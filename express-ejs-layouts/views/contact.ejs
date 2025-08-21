@@ -1,10 +1,127 @@
-<h2>Kontak</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Kontak</h2>
+    <!-- Tombol untuk buka modal -->
+    <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">
+      + Tambah Kontak
+    </button>
+  </div>
+  
   <main>
     <section>
-      <ul>
-    <% contact.forEach(c => { %>
-      <li><strong><%= c.name %></strong> - <%= c.phone %> - <%= c.email %></li>
+     <table class="table-auto border border-gray-400 w-full bg-white shadow-md rounded-lg">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="border border-gray-400 px-4 py-2">No</th>
+      <th class="border border-gray-400 px-4 py-2">Nama</th>
+      <th class="border border-gray-400 px-4 py-2">Telepon</th>
+      <th class="border border-gray-400 px-4 py-2">Email</th>
+      <th class="border border-gray-400 px-4 py-2">Aksi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% contact.forEach((c, i) => { %>
+      <tr class="hover:bg-gray-100">
+        <td class="border border-gray-400 px-4 py-2"><%= i + 1 %></td>
+        <td class="border border-gray-400 px-4 py-2"><%= c.name %></td>
+        <td class="border border-gray-400 px-4 py-2"><%= c.phone %></td>
+        <td class="border border-gray-400 px-4 py-2"><%= c.email %></td>
+        <td class="border border-gray-400 px-4 py-2 flex justify-center space-x-2">
+  <!-- Tombol Edit -->
+  <button 
+    onclick="openEditModal('<%= c.id %>', '<%= c.name %>', '<%= c.phone %>', '<%= c.email %>')" 
+    class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
+    Edit
+  </button>
+
+  <!-- Tombol Hapus -->
+  <form action="/contact/delete/<%= c.id %>" method="POST" onsubmit="return confirm('Yakin hapus kontak ini?')">
+    <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
+      Hapus
+    </button>
+  </form>
+</td>
+
+      </tr>
     <% }) %>
-  </ul>
+  </tbody>
+</table>
     </section>
   </main>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+    <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+      <h3 class="text-xl font-semibold mb-4">Tambah Kontak</h3>
+      <form action="/contact/add" method="POST" class="space-y-3">
+        <input type="text" name="name" placeholder="Nama" class="border p-2 w-full rounded" required>
+        <input type="text" name="phone" placeholder="Telepon" class="border p-2 w-full rounded" required>
+        <input type="email" name="email" placeholder="Email" class="border p-2 w-full rounded" required>
+        
+        <div class="flex justify-end space-x-2 mt-4">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openModal() {
+      document.getElementById("modal").classList.remove("hidden");
+      document.getElementById("modal").classList.add("flex");
+    }
+    function closeModal() {
+      document.getElementById("modal").classList.add("hidden");
+      document.getElementById("modal").classList.remove("flex");
+    }
+  </script>
+  <!-- Modal Edit -->
+<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+  <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+    <h3 class="text-xl font-semibold mb-4">Edit Kontak</h3>
+    <form id="editForm" method="POST" class="space-y-3">
+      <input type="hidden" name="index" id="editIndex">
+      <input type="text" name="name" id="editName" class="border p-2 w-full rounded" required>
+      <input type="text" name="phone" id="editPhone" class="border p-2 w-full rounded" required>
+      <input type="email" name="email" id="editEmail" class="border p-2 w-full rounded" required>
+
+      <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
+        <button type="submit" class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // buka modal edit + isi data
+  function openEditModal(index, name, phone, email) {
+    document.getElementById("editIndex").value = index;
+    document.getElementById("editName").value = name;
+    document.getElementById("editPhone").value = phone;
+    document.getElementById("editEmail").value = email;
+
+    document.getElementById("editForm").action = "/contact/update/" + index;
+
+    document.getElementById("editModal").classList.remove("hidden");
+    document.getElementById("editModal").classList.add("flex");
+  }
+  function closeEditModal() {
+    document.getElementById("editModal").classList.add("hidden");
+    document.getElementById("editModal").classList.remove("flex");
+  }
+</script>
+
+</body>
+</html>
