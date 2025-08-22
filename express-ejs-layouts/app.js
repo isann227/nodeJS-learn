@@ -1,11 +1,15 @@
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
-const fs = require("fs").promises; // gunakan fs.promises
+const morgan = require("morgan");
+const pool = require("./db"); 
+const fs = require("fs").promises;
+
 const app = express();
 const port = 3000;
 
 // Middleware
+app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
@@ -13,57 +17,83 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layout");
 
-// Helper untuk baca file JSON
+// Helper JSON
 const readData = async () => {
   try {
     const data = await fs.readFile("./data/data.json", "utf-8");
     return JSON.parse(data) || [];
-  } catch (err) {
+  } catch {
     return [];
   }
 };
-
-// Helper untuk simpan file JSON
-const writeData = async (contacts) => {
-  await fs.writeFile("./data/data.json", JSON.stringify(contacts, null, 2));
+const writeData = async (newData) => {
+  try {
+    await fs.writeFile("./data/data.json", JSON.stringify(newData, null, 2));
+  } catch (err) {
+    console.error("Gagal menulis data.json:", err);
+  }
 };
 
 // ROUTES
-
-app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
-});
-
-app.get("/about", (req, res) => {
-  res.render("about", { title: "About" });
-});
+app.get("/", (req, res) => res.render("index", { title: "Home" }));
+app.get("/about", (req, res) => res.render("about", { title: "About" }));
 
 app.get("/contact", async (req, res) => {
   try {
-    let contacts = await readData();
-    contacts = contacts.filter(c => c && c.name);
-    res.render("contact", { title: "Contact", contact: contacts });
+    const contact = (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows;
+
+    res.render("contact", {
+      title: "Contact",
+      contact,
+      // default biar gak undefined
+      errorAdd: null,
+      errorEdit: null,
+      old: {},
+      showAddModal: false,
+      showEditModal: false,
+    });
   } catch (err) {
-    res.status(500).send("Gagal membaca data kontak");
+    console.error(err);
+    res.status(500).send("Gagal mengambil data");
   }
 });
+
 
 // CREATE kontak
 app.post("/contact/add", async (req, res) => {
   try {
-    const contacts = await readData();
-    if (req.body.name && req.body.phone && req.body.email) {
-      const newContact = {
-        id: contacts.length > 0 ? contacts[contacts.length - 1].id + 1 : 1,
-        name: req.body.name,
-        phone: req.body.phone,
-        email: req.body.email
-      };
-      contacts.push(newContact);
-      await writeData(contacts);
+    const { name, phone_number, email } = req.body;
+
+    // cek duplikat
+    const duplicate = await pool.query(
+      "SELECT * FROM contact WHERE email=$1 OR phone_number=$2",
+      [email, phone_number]
+    );
+    if (duplicate.rows.length > 0) {
+      return res.status(409).render("contact", {
+        title: "Contact",
+        contact: (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows,
+        errorAdd: "Email atau Nomor Telepon sudah digunakan!",
+        errorEdit: null,
+        old: req.body,
+        showAddModal: true,   // buka modal tambah
+        showEditModal: false, // pastikan modal edit tertutup
+        });
     }
+
+    const result = await pool.query(
+      "INSERT INTO contact (name, phone_number, email) VALUES ($1, $2, $3) RETURNING id",
+      [name, phone_number, email]
+    );
+
+    // simpan ke JSON
+    const oldData = await readData();
+    oldData.push({ id: result.rows[0].id, name, phone_number, email });
+    await writeData(oldData);
+
     res.redirect("/contact");
   } catch (err) {
+    console.error(err);
     res.status(500).send("Gagal menambahkan kontak");
   }
 });
@@ -71,33 +101,60 @@ app.post("/contact/add", async (req, res) => {
 // UPDATE kontak
 app.post("/contact/update/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    const contacts = await readData();
-    const index = contacts.findIndex(c => c && c.id === id);
-    if (index !== -1) {
-      contacts[index] = {
-        id,
-        name: req.body.name,
-        phone: req.body.phone,
-        email: req.body.email
-      };
-      await writeData(contacts);
+    const { id } = req.params;
+    const { name, phone_number, email } = req.body;
+
+    // cek duplikat (selain dirinya sendiri)
+    const duplicate = await pool.query(
+      "SELECT * FROM contact WHERE (email=$1 OR phone_number=$2) AND id<>$3",
+      [email, phone_number, id]
+    );
+    if (duplicate.rows.length > 0) {
+      return res.status(409).render("contact", {
+        title: "Contact",
+  contact: (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows,
+  errorAdd: null,
+  errorEdit: "Email atau Nomor Telepon sudah digunakan!",
+  old: { id, ...req.body },
+  showAddModal: false,
+  showEditModal: true, // buka modal edit
+});
     }
+
+    await pool.query(
+      "UPDATE contact SET name=$1, phone_number=$2, email=$3 WHERE id=$4",
+      [name, phone_number, email, id]
+    );
+
+    // update JSON
+    let data = await readData();
+    data = data.map((c) =>
+      c.id == id ? { id: parseInt(id), name, phone_number, email } : c
+    );
+    await writeData(data);
+
     res.redirect("/contact");
   } catch (err) {
+    console.error(err);
     res.status(500).send("Gagal mengupdate kontak");
   }
 });
 
+
 // DELETE kontak
 app.post("/contact/delete/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    let contacts = await readData();
-    contacts = contacts.filter(c => c && c.id !== id);
-    await writeData(contacts);
+    const { id } = req.params;
+    await pool.query("DELETE FROM contact WHERE id=$1", [id]);
+
+    // Hapus dari JSON juga
+    let data = await readData();
+    data = data.filter((c) => c.id != id);
+    await writeData(data);
+
     res.redirect("/contact");
   } catch (err) {
+    console.error(err);
     res.status(500).send("Gagal menghapus kontak");
   }
 });

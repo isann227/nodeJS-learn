@@ -2,49 +2,43 @@
   {
     "id": 1,
     "name": "insan",
-    "phone": "08981271415",
+    "phone_number": "08981271415",
     "email": "insan@gmail.com"
   },
   {
     "id": 2,
     "name": "hakim",
-    "phone": "089812712627",
+    "phone_number": "08988282782",
     "email": "hakim@gmail.com"
   },
   {
     "id": 3,
-    "name": "insan hakim",
-    "phone": "08982782827",
-    "email": "insanhakim@gmail.com"
+    "name": "isan",
+    "phone_number": "089827282982",
+    "email": "isan@gmail.com"
   },
   {
     "id": 4,
-    "name": "isan",
-    "phone": "08982788229",
-    "email": "isan@gmail.com"
+    "name": "testing",
+    "phone_number": "08982982278",
+    "email": "testing@gmail.com"
   },
   {
     "id": 5,
     "name": "test",
-    "phone": "08981828282",
+    "phone_number": "089817282",
     "email": "test@gmail.com"
   },
   {
     "id": 6,
-    "name": "testoo",
-    "phone": "08728828229",
-    "email": "testoo@gmail.com"
+    "name": "insan hakim",
+    "phone_number": "08982822929",
+    "email": "insanhakim@gmail.com"
   },
   {
     "id": 7,
-    "name": "hakim insan",
-    "phone": "08973838392",
-    "email": "hakiminsan@gmail.com"
-  },
-  {
-    "id": 8,
-    "name": "testtest",
-    "phone": "08927892882",
-    "email": "testtest@gmail.com"
+    "name": "tes test",
+    "phone_number": "09898282337",
+    "email": "testest@gmail.com"
   }
 ]

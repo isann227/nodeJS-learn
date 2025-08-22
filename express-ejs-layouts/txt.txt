@@ -1,0 +1,8 @@
+async function loadContact() {
+  try {
+    const { rows } = await pool.query("SELECT name, phone_number FROM contact");
+    return contacts;
+  } catch (err) {
+    console.error(err.message)
+  }
+}

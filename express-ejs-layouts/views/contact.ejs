@@ -34,12 +34,12 @@
       <tr class="hover:bg-gray-100">
         <td class="border border-gray-400 px-4 py-2"><%= i + 1 %></td>
         <td class="border border-gray-400 px-4 py-2"><%= c.name %></td>
-        <td class="border border-gray-400 px-4 py-2"><%= c.phone %></td>
+        <td class="border border-gray-400 px-4 py-2"><%= c.phone_number %></td>
         <td class="border border-gray-400 px-4 py-2"><%= c.email %></td>
         <td class="border border-gray-400 px-4 py-2 flex justify-center space-x-2">
   <!-- Tombol Edit -->
   <button 
-    onclick="openEditModal('<%= c.id %>', '<%= c.name %>', '<%= c.phone %>', '<%= c.email %>')" 
+    onclick="openEditModal('<%= c.id %>', '<%= c.name %>', '<%= c.phone_number %>', '<%= c.email %>')" 
     class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
     Edit
   </button>
@@ -59,22 +59,31 @@
     </section>
   </main>
 
-  <!-- Modal -->
-  <div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
-    <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
-      <h3 class="text-xl font-semibold mb-4">Tambah Kontak</h3>
-      <form action="/contact/add" method="POST" class="space-y-3">
-        <input type="text" name="name" placeholder="Nama" class="border p-2 w-full rounded" required>
-        <input type="text" name="phone" placeholder="Telepon" class="border p-2 w-full rounded" required>
-        <input type="email" name="email" placeholder="Email" class="border p-2 w-full rounded" required>
-        
-        <div class="flex justify-end space-x-2 mt-4">
-          <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Simpan</button>
-        </div>
-      </form>
-    </div>
+  <!-- Modal Tambah -->
+<div id="modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 <%= showAddModal ? 'flex' : 'hidden' %> justify-center items-center">
+  <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
+    <h3 class="text-xl font-semibold mb-4">Tambah Kontak</h3>
+    <% if (errorAdd) { %>
+      <p class="text-red-500 text-sm mb-2"><%= errorAdd %></p>
+    <% } %>
+    <form action="/contact/add" method="POST" class="space-y-3">
+      <input type="text" name="name" placeholder="Nama"
+             value="<%= old?.name || '' %>"
+             class="border p-2 w-full rounded" required>
+      <input type="text" name="phone_number" placeholder="Telepon"
+             value="<%= old?.phone_number || '' %>"
+             class="border p-2 w-full rounded" required>
+      <input type="email" name="email" placeholder="Email"
+             value="<%= old?.email || '' %>"
+             class="border p-2 w-full rounded" required>
+      
+      <div class="flex justify-end space-x-2 mt-4">
+        <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Simpan</button>
+      </div>
+    </form>
   </div>
+</div>
 
   <script>
     function openModal() {
@@ -86,15 +95,24 @@
       document.getElementById("modal").classList.remove("flex");
     }
   </script>
-  <!-- Modal Edit -->
-<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+ <!-- Modal Edit -->
+<div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 <%= showEditModal ? 'flex' : 'hidden' %> justify-center items-center">
   <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
     <h3 class="text-xl font-semibold mb-4">Edit Kontak</h3>
-    <form id="editForm" method="POST" class="space-y-3">
-      <input type="hidden" name="index" id="editIndex">
-      <input type="text" name="name" id="editName" class="border p-2 w-full rounded" required>
-      <input type="text" name="phone" id="editPhone" class="border p-2 w-full rounded" required>
-      <input type="email" name="email" id="editEmail" class="border p-2 w-full rounded" required>
+    <% if (errorEdit) { %>
+      <p class="text-red-500 text-sm mb-2"><%= errorEdit %></p>
+    <% } %>
+    <form id="editForm" method="POST" action="/contact/update/<%= old?.id || '' %>" class="space-y-3">
+      <input type="hidden" name="index" id="editIndex" value="<%= old?.id || '' %>">
+      <input type="text" name="name" id="editName"
+             value="<%= old?.name || '' %>"
+             class="border p-2 w-full rounded" required>
+      <input type="text" name="phone_number" id="editphone_number"
+             value="<%= old?.phone_number || '' %>"
+             class="border p-2 w-full rounded" required>
+      <input type="email" name="email" id="editEmail"
+             value="<%= old?.email || '' %>"
+             class="border p-2 w-full rounded" required>
 
       <div class="flex justify-end space-x-2 mt-4">
         <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
@@ -106,10 +124,10 @@
 
 <script>
   // buka modal edit + isi data
-  function openEditModal(index, name, phone, email) {
+  function openEditModal(index, name, phone_number, email) {
     document.getElementById("editIndex").value = index;
     document.getElementById("editName").value = name;
-    document.getElementById("editPhone").value = phone;
+    document.getElementById("editphone_number").value = phone_number;
     document.getElementById("editEmail").value = email;
 
     document.getElementById("editForm").action = "/contact/update/" + index;
