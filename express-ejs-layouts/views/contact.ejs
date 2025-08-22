@@ -64,18 +64,26 @@
   <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
     <h3 class="text-xl font-semibold mb-4">Tambah Kontak</h3>
     <% if (errorAdd) { %>
-      <p class="text-red-500 text-sm mb-2"><%= errorAdd %></p>
+      <p class="text-red-500 text-sm mb-2"></p>
     <% } %>
     <form action="/contact/add" method="POST" class="space-y-3">
       <input type="text" name="name" placeholder="Nama"
              value="<%= old?.name || '' %>"
              class="border p-2 w-full rounded" required>
       <input type="text" name="phone_number" placeholder="Telepon"
-             value="<%= old?.phone_number || '' %>"
-             class="border p-2 w-full rounded" required>
-      <input type="email" name="email" placeholder="Email"
-             value="<%= old?.email || '' %>"
-             class="border p-2 w-full rounded" required>
+       value="<%= old?.phone_number || '' %>"
+       class="border p-2 w-full rounded" required>
+<% if (errorAdd?.phone) { %>
+  <p class="text-red-500 text-sm mb-2"><%= errorAdd.phone %></p>
+<% } %>
+
+<input type="email" name="email" placeholder="Email"
+       value="<%= old?.email || '' %>"
+       class="border p-2 w-full rounded" required>
+<% if (errorAdd?.email) { %>
+  <p class="text-red-500 text-sm mb-2"><%= errorAdd.email %></p>
+<% } %>
+
       
       <div class="flex justify-end space-x-2 mt-4">
         <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>
@@ -100,7 +108,7 @@
   <div class="bg-white w-96 p-6 rounded-lg shadow-lg">
     <h3 class="text-xl font-semibold mb-4">Edit Kontak</h3>
     <% if (errorEdit) { %>
-      <p class="text-red-500 text-sm mb-2"><%= errorEdit %></p>
+      <p class="text-red-500 text-sm mb-2"></p>
     <% } %>
     <form id="editForm" method="POST" action="/contact/update/<%= old?.id || '' %>" class="space-y-3">
       <input type="hidden" name="index" id="editIndex" value="<%= old?.id || '' %>">
@@ -108,11 +116,19 @@
              value="<%= old?.name || '' %>"
              class="border p-2 w-full rounded" required>
       <input type="text" name="phone_number" id="editphone_number"
-             value="<%= old?.phone_number || '' %>"
-             class="border p-2 w-full rounded" required>
-      <input type="email" name="email" id="editEmail"
-             value="<%= old?.email || '' %>"
-             class="border p-2 w-full rounded" required>
+       value="<%= old?.phone_number || '' %>"
+       class="border p-2 w-full rounded" required>
+<% if (errorEdit?.phone) { %>
+  <p class="text-red-500 text-sm mb-2"><%= errorEdit.phone %></p>
+<% } %>
+
+<input type="email" name="email" id="editEmail"
+       value="<%= old?.email || '' %>"
+       class="border p-2 w-full rounded" required>
+<% if (errorEdit?.email) { %>
+  <p class="text-red-500 text-sm mb-2"><%= errorEdit.email %></p>
+<% } %>
+
 
       <div class="flex justify-end space-x-2 mt-4">
         <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Batal</button>

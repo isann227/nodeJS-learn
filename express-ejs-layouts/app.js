@@ -69,24 +69,37 @@ app.post("/contact/add", async (req, res) => {
       "SELECT * FROM contact WHERE email=$1 OR phone_number=$2",
       [email, phone_number]
     );
+
     if (duplicate.rows.length > 0) {
+      let errorAdd = { phone: null, email: null };
+
+      duplicate.rows.forEach(row => {
+        if (row.phone_number === phone_number) {
+          errorAdd.phone = "Nomor telepon ini sudah ada";
+        }
+        if (row.email === email) {
+          errorAdd.email = "Email ini sudah ada";
+        }
+      });
+
       return res.status(409).render("contact", {
         title: "Contact",
         contact: (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows,
-        errorAdd: "Email atau Nomor Telepon sudah digunakan!",
-        errorEdit: null,
+        errorAdd,
+        errorEdit: { phone: null, email: null },
         old: req.body,
-        showAddModal: true,   // buka modal tambah
-        showEditModal: false, // pastikan modal edit tertutup
-        });
+        showAddModal: true,
+        showEditModal: false,
+      });
     }
 
+    // insert jika aman
     const result = await pool.query(
       "INSERT INTO contact (name, phone_number, email) VALUES ($1, $2, $3) RETURNING id",
       [name, phone_number, email]
     );
 
-    // simpan ke JSON
+    // update JSON
     const oldData = await readData();
     oldData.push({ id: result.rows[0].id, name, phone_number, email });
     await writeData(oldData);
@@ -98,29 +111,43 @@ app.post("/contact/add", async (req, res) => {
   }
 });
 
+
 // UPDATE kontak
 app.post("/contact/update/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { name, phone_number, email } = req.body;
 
-    // cek duplikat (selain dirinya sendiri)
+     // cek duplikat selain dirinya sendiri
     const duplicate = await pool.query(
       "SELECT * FROM contact WHERE (email=$1 OR phone_number=$2) AND id<>$3",
       [email, phone_number, id]
     );
+
     if (duplicate.rows.length > 0) {
+      let errorEdit = { phone: null, email: null };
+
+      duplicate.rows.forEach(row => {
+        if (row.phone_number === phone_number) {
+          errorEdit.phone = "Nomor telepon ini sudah ada";
+        }
+        if (row.email === email) {
+          errorEdit.email = "Email ini sudah ada";
+        }
+      });
+
       return res.status(409).render("contact", {
         title: "Contact",
-  contact: (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows,
-  errorAdd: null,
-  errorEdit: "Email atau Nomor Telepon sudah digunakan!",
-  old: { id, ...req.body },
-  showAddModal: false,
-  showEditModal: true, // buka modal edit
-});
+        contact: (await pool.query("SELECT * FROM contact ORDER BY id ASC")).rows,
+        errorAdd: { phone: null, email: null },
+        errorEdit,
+        old: { id, ...req.body },
+        showAddModal: false,
+        showEditModal: true,
+      });
     }
-
+    
+    // update jika aman
     await pool.query(
       "UPDATE contact SET name=$1, phone_number=$2, email=$3 WHERE id=$4",
       [name, phone_number, email, id]
@@ -139,6 +166,7 @@ app.post("/contact/update/:id", async (req, res) => {
     res.status(500).send("Gagal mengupdate kontak");
   }
 });
+
 
 
 // DELETE kontak
