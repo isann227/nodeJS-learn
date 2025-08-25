@@ -12,12 +12,15 @@
     "dir": "dir"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.12",
+    "axios": "^1.11.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
     "morgan": "^1.10.1",
     "nodemon": "^3.1.10",
     "pg": "^8.16.3",
+    "tailwindcss": "^4.1.12",
     "validator": "^13.15.15"
   }
 }

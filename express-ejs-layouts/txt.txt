@@ -6,3 +6,5 @@ async function loadContact() {
     console.error(err.message)
   }
 }
+
+membuat aplikasi contact kemarin menjadi efisien dan menjadi react
