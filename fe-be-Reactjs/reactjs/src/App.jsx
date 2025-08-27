@@ -7,6 +7,7 @@ import About from "./pages/About"
 import Contact from "./pages/Contact"
 import CommentClass from "./pages/commentClass"
 import Comment from "./pages/commentFunction"
+import Unsplash from "./pages/Unsplash"
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="contact" element={<Contact />} />
         <Route path="commentClass" element={<CommentClass />} />
         <Route path="commentFunction" element={<Comment />} />
+        <Route path="unsplash" element={<Unsplash />} />
       </Route>
     </Routes>
   )
