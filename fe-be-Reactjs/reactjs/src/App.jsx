@@ -11,6 +11,7 @@ import Unsplash from "./pages/Unsplash"
 import Youtube from "./pages/Youtube"
 import Player from "./pages/Player"
 import Hooks from "./pages/Hokks"
+import RealTimeClock from "./pages/ClockPage"
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="youtube" element={<Youtube />} />
         <Route path="youtube/watch/:id" element={<Player />} />
         <Route path="hooks" element={<Hooks />} />
+        <Route path="clock" element={<RealTimeClock />} />
       </Route>
     </Routes>
   )
