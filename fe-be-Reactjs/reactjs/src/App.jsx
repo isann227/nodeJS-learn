@@ -8,6 +8,9 @@ import Contact from "./pages/Contact"
 import CommentClass from "./pages/commentClass"
 import Comment from "./pages/commentFunction"
 import Unsplash from "./pages/Unsplash"
+import Youtube from "./pages/Youtube"
+import Player from "./pages/Player"
+import Hooks from "./pages/Hokks"
 
 export default function App() {
   return (
@@ -19,6 +22,9 @@ export default function App() {
         <Route path="commentClass" element={<CommentClass />} />
         <Route path="commentFunction" element={<Comment />} />
         <Route path="unsplash" element={<Unsplash />} />
+        <Route path="youtube" element={<Youtube />} />
+        <Route path="youtube/watch/:id" element={<Player />} />
+        <Route path="hooks" element={<Hooks />} />
       </Route>
     </Routes>
   )

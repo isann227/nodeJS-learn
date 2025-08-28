@@ -31,6 +31,12 @@ export default function Navbar() {
           >
             Contact
           </NavLink>
+          <NavLink 
+            to="/youtube" 
+            className={({isActive}) => `${link} ${isActive ? active : ''}`}
+          >
+            youtube
+          </NavLink>
         </li>
       </ul>
     </nav>
